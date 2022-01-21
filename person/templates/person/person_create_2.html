@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<form action = '.' method='POST'> {% csrf_token %}
+
+<input type='text' name = 'name' placeholder='your name'>  
+
+<input type = 'submit' value='Save'/>
+</form>
+{% endblock content %}
