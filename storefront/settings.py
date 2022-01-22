@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'debug_toolbar',
     'person',
+    'barber',
+    'store',
+    'schedule'
 ] 
-
-
 
 
 MIDDLEWARE = [

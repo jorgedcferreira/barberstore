@@ -4,12 +4,12 @@ import re
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Person
-from .forms import PersonForm, RawProductForm
+from .forms import PersonForm
 
 
-def person_detail_view(request):
+def person_detail_view(request, id):
     context = {
-        'object' : Person.objects.get(id=1)
+        'object' : Person.objects.get(id=id)
     }
 
     return render(request, 'person/person_detail.html', context = context)
@@ -31,14 +31,14 @@ def person_create_view(request):
 
 
 def person_update_view(request, id):
-    
     obj = get_object_or_404(Person, id=id)
     form = PersonForm(request.POST or None, instance=obj)
-
+    
     if form.is_valid():
+        print('entrou')
         print(form.cleaned_data)
         form.save()
-        return redirect('../')
+        return redirect('../') 
     
     context = {
         'form': form
@@ -67,6 +67,5 @@ def person_list_view(request):
     context = {
         'object_list': queryset
     }
-
 
     return render(request, 'person/person_list.html', context)

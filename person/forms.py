@@ -9,22 +9,20 @@ from .models import Person
 
 class PersonForm(forms.ModelForm):
     
-    id_number = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': 'Your id number'}))
     nif = forms.IntegerField(label = 'NIF', required=False)
     class Meta:
         model = Person
         fields = [
             'name',
             'surname',
-            'height', 
             'email',
             'date_of_birth',
-            'id_number',
             'nif',
-            'is_alive', 
-            
+            'preferred_barber',
+            'preferred_store'
         ]
     
+
     #Validation on the form for the NIF
     def clean_nif(self, *args, **kwargs):
         """Checks if the NIF respects the portugues logic for personal fiscal number, with check digit. 

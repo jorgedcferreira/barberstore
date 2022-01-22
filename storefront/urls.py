@@ -27,10 +27,10 @@ urlpatterns = [
     #path('about/', about_view, name='about'),
     path('admin/', admin.site.urls),
     path('person/', include('person.urls')),
-    # path('persons/create/', person_create_view, name='create_person'),
-    # path('persons/<int:id>/', person_update_view, name = 'person-detail'),
-    # path('persons/<int:id>/delete/', person_delete_view, name='person-delete'),
-    # path('persons/', person_list_view, name='person-list')
+    path('barber/', include('barber.urls')),
+    path('store/', include('store.urls')),
+    path('schedule/', include('schedule.urls')),
+
 ]
 
 if settings.DEBUG:
