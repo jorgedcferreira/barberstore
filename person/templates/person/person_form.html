@@ -1,28 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content%}
-
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" ><a href="//127.0.0.1:8000/store">Stores</a></li>
+      <li class="breadcrumb-item active" ><a href="//127.0.0.1:8000/person">Customers</a></li>
       <li class="breadcrumb-item active" aria-current="page">
         {% if object %}
-        {{object.name}}
+        {{object.name}} {{object.surname}} 
         {% else %}    
         Create barber store
         {% endif %}
     </li>
     </ol>
 </nav>
-{% if object %}
-    <h1>{{object.name}}</h1>
-{% else %}    
-    <h1>Create barber store</h1>
-{% endif %}
 
-<br>
+
 <form method='POST'> {% csrf_token %}
-{{ form.as_p }}
+<h1>{{object.name}} {{object.surname}}</h1>
+<br>
+{{form.as_p}}
 <input type = 'submit' value='Save'/>
 </form>
 {% endblock content %}

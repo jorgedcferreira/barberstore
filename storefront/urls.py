@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 import debug_toolbar
 import storefront.settings as settings
+from store.views import StoreList
 
 
 urlpatterns = [
@@ -30,6 +31,7 @@ urlpatterns = [
     path('barber/', include('barber.urls')),
     path('store/', include('store.urls')),
     path('schedule/', include('schedule.urls')),
+    path('', StoreList.as_view(), name='store-list')
 
 ]
 

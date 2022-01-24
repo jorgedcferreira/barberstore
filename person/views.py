@@ -27,11 +27,12 @@ def person_create_view(request):
         'form': form
     }
 
-    return render(request, 'person/person_create.html', context)
+    return render(request, 'person/person_form.html', context)
 
 
 def person_update_view(request, id):
     obj = get_object_or_404(Person, id=id)
+    print(obj)
     form = PersonForm(request.POST or None, instance=obj)
     
     if form.is_valid():
@@ -41,10 +42,12 @@ def person_update_view(request, id):
         return redirect('../') 
     
     context = {
-        'form': form
+        'form': form,
+        'object': obj
+        
     }
 
-    return render(request, 'person/person_create.html', context)
+    return render(request, 'person/person_form.html', context)
 
 
 def person_delete_view(request, id):

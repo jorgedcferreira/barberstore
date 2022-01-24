@@ -17,14 +17,14 @@ def barber_create_view(request):
 
     if form.is_valid():
         print(form.cleaned_data)
-        form.save()
-        form = BarberForm()
+        obj = form.save()   
+        return redirect('../..{}'.format(obj.get_absolute_url()))
     
     context = {
         'form': form
     }
 
-    return render(request, 'barber/barber_create.html', context)
+    return render(request, 'barber/barber_form.html', context)
 
 
 def barber_update_view(request, id):
@@ -34,13 +34,14 @@ def barber_update_view(request, id):
     if form.is_valid():
         print(form.cleaned_data)
         form.save()
-        return redirect('../') 
+        form = BarberForm(request.POST or None, instance=obj)
     
     context = {
-        'form': form
+        'form': form,
+        'object' : obj
     }
 
-    return render(request, 'barber/barber_create.html', context)
+    return render(request, 'barber/barber_form.html', context)
 
 
 def barber_delete_view(request, id):
@@ -49,6 +50,7 @@ def barber_delete_view(request, id):
     if request.method == 'POST':
         obj.delete()
         return redirect('../../')
+        
 
     context = {
         'object': obj

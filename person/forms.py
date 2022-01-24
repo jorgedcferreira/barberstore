@@ -6,10 +6,23 @@ from turtle import title
 from xml.dom import ValidationErr
 from django import forms
 from .models import Person
+from django.forms import ModelChoiceField
+from barber.models import Barber
+from store.models import Store
+
+class BarberModelChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "%s %s %s" % (obj.id,obj.name, obj.surname)
+
+class StoreModelChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return str(obj.name)
 
 class PersonForm(forms.ModelForm):
     
     nif = forms.IntegerField(label = 'NIF', required=False)
+    preferred_barber = BarberModelChoiceField(queryset=Barber.objects.all())
+    preferred_store = StoreModelChoiceField(queryset=Store.objects.all())
     class Meta:
         model = Person
         fields = [

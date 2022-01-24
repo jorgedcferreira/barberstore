@@ -1,8 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<h1>Barber list</h1>
-    {% for object in object_list %}
-        <p>Name: <a href='{{ object.get_absolute_url }}'>{{ object.name }} {{ object.surname }}</a> </p>
-    {% endfor %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Barbers</li>
+    </ol>
+</nav>
+
+
+<div class="row align-items-start">
+    <div class="col">
+        <h1>Your barbers</h1>
+        <br>
+        {% for object in object_list %}
+            <p>Name: <a href='{{ object.get_absolute_url }}'>{{ object.name }} {{ object.surname }}</a> </p>
+        {% endfor %}
+    </div>
+    <div class="col text-right">
+        <br>
+        <form  name="create-store" method="GET" action="./create">
+            <input type="submit" class="btn btn-link" value= "Add new barber"/>
+        </form>
+
+    </div>
+</div>
+
 {% endblock content %}
