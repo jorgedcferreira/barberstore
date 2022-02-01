@@ -14,15 +14,28 @@
     </li>
     </ol>
 </nav>
-{% if object %}
-    <h1>{{object.name}}</h1>
-{% else %}    
-    <h1>Create barber store</h1>
-{% endif %}
 
-<br>
-<form method='POST'> {% csrf_token %}
-{{ form.as_p }}
-<input type = 'submit' value='Save'/>
-</form>
+<div class="row align-items-start">
+    <div class="col">
+        {% if object %}
+            <h1>{{object.name}}</h1>
+        {% else %}    
+            <h1>Create barber store</h1>
+        {% endif %}
+        <br>
+        <form method='POST'> {% csrf_token %}
+        {{ form.as_p }}
+        <br>
+        <input  class="btn btn-primary mb-3" type = 'submit' value='Save'/>
+    </div>
+    {% if object.id %}
+      <div class="col">
+          <div class="col text-right">
+              <br>
+              <a href="./delete" class="link-danger">Delete</a>
+          </div> 
+      </div>   
+    {% endif %}
+    </form>
+</div>
 {% endblock content %}

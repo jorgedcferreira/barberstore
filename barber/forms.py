@@ -9,3 +9,8 @@ class BarberForm(forms.ModelForm):
             'name',
             'surname'           
         ]
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'surname': forms.TextInput(attrs={'class': 'form-control'}),
+        }

@@ -1,3 +1,20 @@
+# Visual Studio Code # 
+.vscode/*
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
+.history
+
+# PIP #
+Pipfile
+Pipfile.lock
+
+.DS_Store
+
 # Django #
 *.log
 *.pot
@@ -128,13 +145,3 @@ Control.ca-bundle
 Control.system-ca-bundle 
 GitHub.sublime-settings 
 
-# Visual Studio Code # 
-.vscode/*
-.vscode/
-.vscode/settings.json
-.vscode/launch.json
-!.vscode/settings.json 
-!.vscode/tasks.json 
-!.vscode/launch.json 
-!.vscode/extensions.json 
-.history

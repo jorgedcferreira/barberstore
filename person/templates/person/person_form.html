@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+<script>
+  var myModal = document.getElementById('myModal')
+  var myInput = document.getElementById('myInput')
+
+  myModal.addEventListener('shown.bs.modal', function () {
+  myInput.focus()
+  })
+</script>
 
 {% block content%}
 <nav aria-label="breadcrumb">
@@ -14,11 +22,38 @@
     </ol>
 </nav>
 
+<div class="row align-items-start">
+  <div class="col">
+    <h1>
+      {% if object %}
+        {{object.name}} {{object.surname}} 
+        {% if object.is_active %} 
+          <span class="badge bg-success">Active</span> 
+        {% else %}
+          <span class="badge bg-light text-dark">Inactive</span>
+        {% endif %}
+      {% else %}    
+        Create customer
+      {% endif %}
+    </h1>
+    <form method='POST'> {% csrf_token %}
+    <br>
+    {{form.as_p}}
+    <input class="btn btn-primary mb-3" type = 'submit' value='Save'/>
+  </div>
+    {% if object.id %}
+      <div class="col">
+          <div class="col text-right">
+              <br>
+              <a href="./delete" class="link-danger">Delete</a>
+          </div> 
+        
+    {% endif %}
+    
 
-<form method='POST'> {% csrf_token %}
-<h1>{{object.name}} {{object.surname}}</h1>
-<br>
-{{form.as_p}}
-<input type = 'submit' value='Save'/>
 </form>
+</div>
+
+
+
 {% endblock content %}
