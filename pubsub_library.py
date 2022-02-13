@@ -1,60 +1,163 @@
-from itertools import chain 
+import csv
+import os
+
+#Lib to observe filesystem event  https://levelup.gitconnected.com/how-to-monitor-file-system-events-in-python-e8e0ed6ec2c
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+class MyHandler(FileSystemEventHandler):
+    def on_any_event(self, event):
+        return event.event_type, event.src_path
 
 
-class Subscriber():
-    def __init__(self, name, subscriber_handler=None):
-        self.name = name
+#configs
+pubsub_base_folder_path = 'pubsub_messages'
+
+class Broker(MyHandler, object):
+    """
+    Broker
+    """
+    def __init__(self, name=''):
+        self._name = name
+        self._subscribers = []
+        self.files_watched = []
+        self.file_observers = []
+
+
+    def attach(self, subscriber):
+        """"""
+        if subscriber not in self._subscribers:
+            self._subscribers.append(subscriber)
+
+    def detach(self, subscriber):
+        """"""
+        if subscriber in self._subscribers:
+            self._subscribers.remove(subscriber)
+
+    def route(self, msg, topic=''):
+        """"""
+        topic_file_path, topic_offset_file_path = self.__validate_files_and_directories(topic)
+
+        #Writting event in file
+        with open(topic_file_path, 'a+', newline='', encoding="UTF8") as file:
+            with open(topic_offset_file_path) as offset_file:
+                offset = int(offset_file.read())
+                offset_file.close()
+            csv_writer = csv.writer(file)
+            offset += 1
+            data = [offset,str(msg)]
+            csv_writer.writerow(data)
+            with open(topic_offset_file_path, 'w') as offset_file:
+                offset_file.write(str(offset))
+                offset_file.close()
+        print('vou a ver os meus subs')
+        for subscriber in self._subscribers:
+            print('estou a ver os meus subs')
+            if topic in subscriber.topic:
+                message_output = {"event": topic,
+                                "message": msg
+                                }
+                
+                subscriber_handler = getattr(subscriber, 'subscriber_handler')
+                if subscriber_handler:
+                    subscriber_handler(message_output)
+                else:
+                    subscriber.sub(message_output)
+
+    
+    # def on_any_event(self, event):
+    #     print('AAAAAA')
+    
+
+    def __validate_files_and_directories(self, topic):
+        #File and brokers paths
+        topic_file_path = './{}/{}/{}_topic.csv'.format(pubsub_base_folder_path , self._name, topic)
+        topic_offset_file_path = './{}/{}/{}_topic_offset.txt'.format(pubsub_base_folder_path ,self._name, topic)
+        broker_folder_path = '{}/{}'.format(pubsub_base_folder_path,self._name)
+
+        #Check if broker messages directory and file exist
+        chek_base_folder = os.path.isdir(pubsub_base_folder_path)
+        check_topic_file = os.path.exists(topic_file_path)
+        check_topic_offset_file = os.path.exists(topic_offset_file_path)
+
+
+        #Create base and broker directory if not exists
+        if not chek_base_folder:
+            os.makedirs(pubsub_base_folder_path)
+            print("created folder : ", pubsub_base_folder_path)
+            check_broker_folder = os.path.isdir(broker_folder_path)
+            
+            if not check_broker_folder:
+                os.makedirs(broker_folder_path)
+                print("created folder : ", broker_folder_path)
+
+        #Create files if not exists
+        if not check_topic_file:
+            with open(topic_file_path, 'w') as file:
+                writer = csv.writer(file)
+                header = ['event_id', 'message']
+                writer.writerow(header)
+                print('{} file created'.format(topic_file_path))
+                file.close()
+            # new_observer = Observer()
+            # new_observer.schedule(MyHandler, path=topic_file_path, recursive=False)
+            # new_observer.start()
+            # self.file_observers.append(new_observer)
+            
+
+        if not check_topic_offset_file:
+            with open(topic_offset_file_path, 'w') as file:
+                file.write('0')
+                file.close()
+
+
+        return topic_file_path, topic_offset_file_path
+
+
+class Publisher(object):
+    """Publisher"""
+    def __init__(self, name, broker):
+        self._name = name
+        self._broker = broker
+
+    def pub(self, msg, topic=''):
+        print('[Publisher: {}] topic: {}, message: {}'.format(self._name, topic, msg))  
+        self._broker.route(msg, topic)
+
+
+class Subscriber(object):
+    """Subscriber"""
+    def __init__(self, name, broker, topic=None, subscriber_handler= None):
+        self._name = name
+        broker.attach(self)
+        self._topic = [] if topic is None else topic
         self.subscriber_handler = subscriber_handler
 
-    def default_handler(self, message):
-        print('{} got message "{}"'.format(self.name, message))
+    def sub(self, msg):
+        print('[Subscriber: {}] got message: {}'.format(self._name, msg))
+
+    @property   
+    def topic(self):
+        return self._topic
 
 
 
-class Publisher:
-    def __init__(self, events):
-        self.subscribers = {event: dict()
-                            for event in events}
+def main():
+    broker = Broker('broker')
 
-    def get_subscribers(self, event):
-        return self.subscribers[event]
-
-    def register(self, event, subscriber, subscriber_handler=None):
-        if subscriber_handler is None and getattr(subscriber, 'subscriber_handler') != None:
-            subscriber_handler = getattr(subscriber, 'subscriber_handler')
-        else:
-            subscriber_handler = getattr(subscriber, 'default_handler')
-        self.get_subscribers(event)[subscriber] = subscriber_handler
-        
-    def unregister(self, event, subscriber):
-        del self.get_subscribers(event)[subscriber]
     
-    def dispatch(self, event, message):
-        for subscriber, subscriber_handler in self.get_subscribers(event).items():
-            message_output = {"event": event,
-                                "message": message
-                                }
-            subscriber_handler(message_output)
+    p1 = Publisher('p1', broker)
+    p2 = Publisher('p2', broker)
 
+    def s1_handler(message):
+        print(message)
 
-class Observer:
-    def __init__(self, pubsub_config):
-        self.pub = Publisher(events=[topic['event'] for topic in pubsub_config['topic_subscribers']])
-        self.subscribers = {}
-
-        for subscriber_name in list(dict.fromkeys([subscriber['subscriber_name'] for subscriber in list(chain.from_iterable([topic['subscribers'] for topic in pubsub_config['topic_subscribers']]))])):
-            self.subscribers[subscriber_name]= Subscriber(subscriber_name)
-        
-        for topic in pubsub_config['topic_subscribers']:
-            for subscriber in topic['subscribers']:
-                self.pub.register(topic['event'], self.subscribers[subscriber['subscriber_name']], subscriber['handler'])
-
-    def dispatch(self, event, message):
-            self.pub.dispatch(event, message)
-
-    def register_subscriber(self, subscriber_name, handler=None):
-        self.subscribers[subscriber_name]= Subscriber(subscriber_name, handler)
+    s1 = Subscriber('s1', broker, topic=['A'], subscriber_handler=s1_handler)
+    s2 = Subscriber('s2', broker, topic=['A', 'B'])
     
-    def unregister_subscriber(self, event, subscriber_name):
-        del self.pub.get_subscribers(event)[subscriber_name]
+    p1.pub('hello s1', topic='A')
+    p2.pub('hello s2', topic='B')
 
+
+if __name__ == '__main__':
+    main()

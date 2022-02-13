@@ -1,7 +1,9 @@
-from pubsub_library import Subscriber
+from observer_library import Subscriber
 import smtplib
 import json
 #import notifications_configs as cfg
+from pubsub_library import Subscriber as pubsub_Subscriber
+from brokers import broker
 
 
 
@@ -10,12 +12,12 @@ def notications_subscriber_handler(message):
     gmail_user = 'thebarberstoreproject@gmail.com'
     gmail_password = 'ADSadsproject'
     sent_from = gmail_user
-    print(message)
-
-    print('entrou')
+    
     to = ['thebarberstoreproject@gmail.com']
     subject = 'Welcome to The Barber Store'
     body = 'Welcome to The Barber Store'
+
+    print('isto correu bem')
 
     email_text = """\
     From: %s
@@ -35,8 +37,9 @@ def notications_subscriber_handler(message):
     except Exception as ex:
         return print ("Something went wrong….",ex)
 
+
+
 notifications_subscriber = Subscriber('NotificationsSubscriber', notications_subscriber_handler)
 
-
-
+notifications_pubsub_subscriber = pubsub_Subscriber(name='NotificationsSubscriber', broker=broker, topic=['PersonCreatedEvent'], subscriber_handler=notications_subscriber_handler)
 

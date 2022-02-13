@@ -1,14 +1,16 @@
-from email import contentmanager
-from multiprocessing import context
-import re
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from .models import Person
 from .forms import PersonForm
-#from pubsub2 import observer
-from pubsub import person_publisher
-from django.http import JsonResponse
-#from django_remot   e_forms.forms import RemoteForm
+
+#PubSub
+import pubsub
+from .events import PersonPublisher as pubsub_PersonPublisher
+
+#Observer
+import observer as observer 
+
+
 
 
 
@@ -25,8 +27,8 @@ def person_create_view(request):
 
     if form.is_valid():
         obj = form.save()
-        #observer.dispatch('PersonCreatedEvent', form.cleaned_data)
-        person_publisher.dispatch('PersonCreatedEvent', form.cleaned_data)
+        #observer.person_publisher.dispatch('PersonCreatedEvent', form.cleaned_data)
+        #pubsub_PersonPublisher.pub(form.cleaned_data, topic='PersonCreatedEvent')
         return redirect('../..{}'.format(obj.get_absolute_url()))
         
     

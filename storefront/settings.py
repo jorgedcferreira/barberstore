@@ -43,9 +43,8 @@ INSTALLED_APPS = [
     'person',
     'barber',
     'store',
-    'schedule'
+    'schedule',
 ] 
-
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',

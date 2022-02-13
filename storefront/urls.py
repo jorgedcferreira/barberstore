@@ -31,7 +31,7 @@ urlpatterns = [
     path('barber/', include('barber.urls')),
     path('store/', include('store.urls')),
     path('schedule/', include('schedule.urls')),
-    path('', StoreList.as_view(), name='store-list')
+    path('', StoreList.as_view(), name='store-list'),
 
 ]
 
