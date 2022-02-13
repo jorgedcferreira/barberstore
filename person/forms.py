@@ -9,10 +9,12 @@ from .models import Person
 from django.forms import ModelChoiceField
 from barber.models import Barber
 from store.models import Store
+from phonenumber_field.formfields import PhoneNumberField
+
 
 class BarberModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
-        return "%s %s %s" % (obj.id,obj.name, obj.surname)
+        return "%s %s" % (obj.name, obj.surname)
 
 class StoreModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
@@ -20,20 +22,41 @@ class StoreModelChoiceField(ModelChoiceField):
 
 class PersonForm(forms.ModelForm):
     
-    nif = forms.IntegerField(label = 'NIF', required=False)
-    preferred_barber = BarberModelChoiceField(queryset=Barber.objects.all())
-    preferred_store = StoreModelChoiceField(queryset=Store.objects.all())
+    nif = forms.IntegerField(label = 'NIF', required=False, 
+                            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
+    preferred_barber = BarberModelChoiceField(queryset=Barber.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control'}))
+                            
+    preferred_store = StoreModelChoiceField(queryset=Store.objects.all(),
+     widget=forms.Select(attrs={'class': 'form-control'}))
+
+    # phone = PhoneNumberField(label = 'Phone number', widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    
     class Meta:
         model = Person
         fields = [
             'name',
             'surname',
+            #'phone',
             'email',
             'date_of_birth',
             'nif',
             'preferred_barber',
-            'preferred_store'
+            'preferred_store',
+            'is_active'
         ]
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'surname': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control'}), 
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),     
+            }
+        
+
     
 
     #Validation on the form for the NIF
@@ -63,14 +86,4 @@ class PersonForm(forms.ModelForm):
         else:
             raise forms.ValidationError(message= "This is not a valid NIF")
     
-
-
-class RawProductForm(forms.Form):
-    name = forms.CharField()
-    surname = forms.CharField()
-    height = forms.DecimalField(max_digits=3, decimal_places=2)
-    email = forms.EmailField()
-    date_of_birth = forms.DateField()
-    id_number = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': 'Your id number'}))
-    is_alive = forms.BooleanField(initial=True)
 

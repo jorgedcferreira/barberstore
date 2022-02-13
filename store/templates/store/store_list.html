@@ -14,7 +14,16 @@
         <h1>Your barber stores</h1>
         <br>
         {% for object in object_list %}
-            <p>Name: <a href='{{ object.get_absolute_url }}'>{{ object.name }}</a> </p>
+        <div class="row">
+            <div class="col">
+            <a href='{{ object.get_absolute_url }}'>{{ object.name }}</a> </p>
+            </div>
+            <div class="col">
+                <a href="{{ object.get_absolute_url }}delete" class="link-danger">Delete</a>
+                
+            </div>
+            
+        </div>
         {% endfor %}
     </div>
     <div class="col text-right">
