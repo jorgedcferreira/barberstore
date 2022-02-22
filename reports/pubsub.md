@@ -1,4 +1,13 @@
 
+1. [Introduction](#Introduction)
+2. [Patterns used](#Patterns-used)
+3. [Use Case](#Use-Case)
+4. [UML of classes business](#UML-of-classes-business)
+5. [User interfaces](#User-interfaces)
+6. [Pubsub and Observer patterns](#Pubsub-and-Observer-patterns)
+7. [Conclusions](#Conclusions)
+
+
 # Introduction
 
 This work is an implementation of the Publisher-Subscriber design pattern within an application of a barber shop management tool. The objective o the work is to explore the capabilities of the Publisher-Subscriber pattern and compare it the Observer pattern. For this purpose the implementation of both patterns was implemented.
