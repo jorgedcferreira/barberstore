@@ -28,7 +28,7 @@ def person_create_view(request):
     if form.is_valid():
         obj = form.save()
         #observer.person_publisher.dispatch('PersonCreatedEvent', form.cleaned_data)
-        #pubsub_PersonPublisher.pub(form.cleaned_data, topic='PersonCreatedEvent')
+        pubsub_PersonPublisher.pub(form.cleaned_data, topic='PersonCreatedEvent')
         return redirect('../..{}'.format(obj.get_absolute_url()))
         
     

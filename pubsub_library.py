@@ -1,19 +1,10 @@
 import csv
 import os
 
-#Lib to observe filesystem event  https://levelup.gitconnected.com/how-to-monitor-file-system-events-in-python-e8e0ed6ec2c
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-
-class MyHandler(FileSystemEventHandler):
-    def on_any_event(self, event):
-        return event.event_type, event.src_path
-
-
 #configs
 pubsub_base_folder_path = 'pubsub_messages'
 
-class Broker(MyHandler, object):
+class Broker(object):
     """
     Broker
     """
@@ -51,8 +42,9 @@ class Broker(MyHandler, object):
                 offset_file.write(str(offset))
                 offset_file.close()
         print('vou a ver os meus subs')
-        for subscriber in self._subscribers:
-            print('estou a ver os meus subs')
+    
+    def call_subscribers(self, topic, msg):
+        for subscriber in self._subscribers: 
             if topic in subscriber.topic:
                 message_output = {"event": topic,
                                 "message": msg
@@ -64,9 +56,6 @@ class Broker(MyHandler, object):
                 else:
                     subscriber.sub(message_output)
 
-    
-    # def on_any_event(self, event):
-    #     print('AAAAAA')
     
 
     def __validate_files_and_directories(self, topic):
@@ -99,10 +88,6 @@ class Broker(MyHandler, object):
                 writer.writerow(header)
                 print('{} file created'.format(topic_file_path))
                 file.close()
-            # new_observer = Observer()
-            # new_observer.schedule(MyHandler, path=topic_file_path, recursive=False)
-            # new_observer.start()
-            # self.file_observers.append(new_observer)
             
 
         if not check_topic_offset_file:
@@ -139,7 +124,6 @@ class Subscriber(object):
     @property   
     def topic(self):
         return self._topic
-
 
 
 def main():
