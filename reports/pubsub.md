@@ -37,7 +37,7 @@ Each one of the classes above mentioned has a menu with UI (User Interfaces) for
 
 # Pubsub and Observer patterns
 
-Starting with the Observer pattern, it was created a Python file with the implementation of the pattern classes (observer_library.py). For that, there were created 3 classes, the Publisher, the Subscriber and a main class Observer. This later class can be used optionally, in alternative to create each one of the Publishers and Subscribers individually by having a configuration as a dictionary, and it is a matter of code style preference. 
+Starting with the Observer pattern, it was created a Python file with the implementation of the pattern classes ([observer_library.py](https://github.com/jorgedcferreira/barberstore/blob/main/observer_library.py)). For that, there were created 3 classes, the Publisher, the Subscriber and a main class Observer. This later class can be used optionally, in alternative to create each one of the Publishers and Subscribers individually by having a configuration as a dictionary, and it is a matter of code style preference. 
 
 On the Observer pattern the Publisher class knows a list of its Subscriber objects, in order to dispatch the events to them. The publisher has 4 public methods: the get_subscribers (to get the list of subscribers), the register (the registration of a  new subscriber), the unregister (to unregister a subscriber) and the dispatch (to dispatch a message or event). On the Subscriber side it only has 2 attributes: a name and a handler, which is a function to handle the events that are dispatched to that Subscriber objetc.
 
@@ -55,7 +55,7 @@ The most important method of this pattern is the dispatch method of the Publishe
 
 The Publisher-Subscriber pattern implementation has the same Classes Publisher and Subscriber, but the responsibilities of them are slightly different. Besides the Publisher and the Subscriber the class Broker exists and it is necessary for the implementation of the pattern, the Broker is the one responsible for calling the subscribers when an event is published. This happens asynchronously since the events are written on a .csv file  with the topic name and then, a file system observer (using watchdog python library) will track changes on that specific documents and will call the broker to trigger the messages to the subscribers that are consuming that specific topic. 
 
-The implementation of it was as well done on a file called pubsub_library.py and the watchdog file system observer that will call the Broker Object is on the file brokers.py. 
+The implementation of it was as well done on a file called [pubsub_library.py](https://github.com/jorgedcferreira/barberstore/blob/main/pubsub_library.py) and the watchdog file system observer that will call the Broker Object is on the file brokers.py. 
 
 The class broker has a method that calls the subscribers:
 
