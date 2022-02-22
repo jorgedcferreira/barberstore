@@ -2,6 +2,13 @@ The Pattern: Ports and Adapters (‘’Object Structural’’)
 Alternative name: ‘’Ports & Adapters’’ 
 Alternative name: ‘’Hexagonal Architecture’’
 
+1. [INTRODUCTION](#INTRODUCTION)
+2. [CONTEXT](#CONTEXT)
+3. [PROBLEM](#PROBLEM)
+4. [SOLUTION](#SOLUTION)
+5. [PROS OF THE PATTERN](#PROS-OF-THE-PATTERN)
+6. [REFERENCES](#REFERENCES)
+
 
 # INTRODUCTION
 
