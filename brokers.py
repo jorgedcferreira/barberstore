@@ -28,9 +28,9 @@ observer = Observer()
 observer.schedule(event_handler, path='./pubsub_messages/broker/', recursive=False)
 observer.start()
 
-try:
-    while True:
-            time.sleep(1)
-finally:
-    observer.stop()
-    observer.join()
+# try:
+#     while True:
+#             time.sleep(1)
+# finally:
+#     observer.stop()
+#     observer.join()
